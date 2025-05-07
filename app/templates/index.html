@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>RefúgioSuite 2003 - Editor Retrô</title>
-  <link rel="stylesheet" type="text/css" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="toolbar">
@@ -222,7 +222,7 @@
           gptMenu.style.display = 'none';
           gptModalText.innerHTML = '<i>Processando IA...</i>';
           gptModal.style.display = 'flex';
-          fetch('/gpt_assist', {
+          fetch(BASE_URL + '/gpt_assist', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({texto: selectedText, acao: acao})
@@ -280,7 +280,7 @@
         }
         genContentStatus.textContent = 'Gerando conteúdo com IA...';
         genContentResult.textContent = '';
-        fetch('/gpt_assist', {
+        fetch(BASE_URL + '/gpt_assist', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({texto: prompt, acao: 'gerar_'+tipo})
