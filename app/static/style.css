@@ -1,0 +1,95 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  background-color: #d4d0c8;
+}
+
+body {
+  min-height: 100vh;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  background-color: #d4d0c8;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  padding: 10px 14px 10px 10px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 2px #b0b0b0;
+}
+
+.toolbar button {
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 12px;
+  background-color: #d4d0c8;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  margin-right: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.toolbar button:active {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  background-color: #c0c0c0;
+}
+
+.toolbar select {
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 12px;
+  background-color: #ffffff;
+  border: 1px solid #808080;
+  margin-right: 8px;
+}
+
+.editor {
+  font-family: 'Times New Roman', serif;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px inset #808080;
+  padding: 8px;
+  margin: 0 10px 10px 10px;
+  min-height: 0;
+  height: 100%;
+  flex: 1 1 auto;
+  overflow: auto;
+  resize: none;
+  box-sizing: border-box;
+}
+
+/* Estilos para o título */
+h1, h2, h3 {
+  font-family: Tahoma, Arial, sans-serif;
+  color: #000080;
+}
+
+.preview {
+  display: none;
+}
+
+/* Barra de rolagem retrô para compatibilidade */
+.editor::-webkit-scrollbar {
+  width: 12px;
+  background: #e0e0e0;
+}
+.editor::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: 1px solid #808080;
+}
+
+/* Compatibilidade Panther: nada de box-shadow moderno, nem media queries, nem variáveis CSS. */
+

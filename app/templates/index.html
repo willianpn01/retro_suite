@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>RefúgioSuite 2003 - Editor Retrô</title>
+  <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+  <div class="toolbar">
+    <form method="POST" onsubmit="return submitEditor()">
+      <button type="button" id="undoBtn" title="Desfazer">⎌</button>
+      <button type="button" id="redoBtn" title="Refazer">↻</button>
+      <button type="button" id="boldBtn"><b>B</b></button>
+      <button type="button" id="italicBtn"><i>I</i></button>
+      <button type="button" id="underlineBtn"><u>U</u></button>
+      <button type="button" id="ulBtn" title="Lista com marcadores">• ●</button>
+      <button type="button" id="olBtn" title="Lista numerada">1.</button>
+      <button type="button" id="linkBtn" title="Inserir link">🔗</button>
+      <button type="button" id="imgBtn" title="Inserir imagem">🖼️</button>
+      <button type="button" id="removeFormatBtn" title="Limpar formatação">Tx</button>
+      <select id="colorSelect">
+        <option value="">Cor</option>
+        <option value="black">Preto</option>
+        <option value="gray">Cinza</option>
+        <option value="silver">Prata</option>
+        <option value="white">Branco</option>
+        <option value="red">Vermelho</option>
+        <option value="maroon">Bordô</option>
+        <option value="orange">Laranja</option>
+        <option value="yellow">Amarelo</option>
+        <option value="olive">Oliva</option>
+        <option value="green">Verde</option>
+        <option value="teal">Azul Petróleo</option>
+        <option value="blue">Azul</option>
+        <option value="navy">Azul Marinho</option>
+        <option value="purple">Roxo</option>
+        <option value="magenta">Magenta</option>
+        <option value="pink">Rosa</option>
+        <option value="brown">Marrom</option>
+        <option value="cyan">Ciano</option>
+        <option value="gold">Dourado</option>
+      </select>
+      <select id="fontSizeSelect">
+        <option value="">Tamanho</option>
+        <option value="1">Muito Pequeno</option>
+        <option value="2">Pequeno</option>
+        <option value="3">Normal</option>
+        <option value="4">Grande</option>
+        <option value="5">Muito Grande</option>
+        <option value="6">Enorme</option>
+        <option value="7">Máximo</option>
+      </select>
+      <select id="fontNameSelect">
+        <option value="">Fonte</option>
+        <option value="Times New Roman">Times</option>
+        <option value="Arial">Arial</option>
+        <option value="Courier New">Courier</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Comic Sans MS">Comic Sans</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Trebuchet MS">Trebuchet</option>
+        <option value="Monospace">Monospace</option>
+      </select>
+      <button type="button" id="leftBtn">Esq.</button>
+      <button type="button" id="centerBtn">Centro</button>
+      <button type="button" id="rightBtn">Dir.</button>
+      <button type="button" id="justifyBtn">Just.</button>
+      <div class="dropdown" style="display:inline-block; position:relative;">
+        <button type="button" id="fileMenuBtn" style="min-width:90px;">Arquivo ▼</button>
+        <div id="fileMenu" class="dropdown-content" style="display:none; position:absolute; left:0; top:100%; background:#d4d0c8; border:1px solid #808080; min-width:160px; z-index:1000; box-shadow:2px 2px 5px #b0b0b0;">
+          <button type="button" id="saveTxtBtn" style="width:100%; text-align:left;">Salvar como TXT</button>
+          <button type="button" id="saveDocxBtn" style="width:100%; text-align:left;">Salvar como DOCX</button>
+          <button type="button" id="exportDocxBackendBtn" style="width:100%; text-align:left;">Exportar DOCX (backend)</button>
+          <label for="openFile" style="width:100%; display:block; margin:0; padding:0;">
+            <span style="display:block; width:100%; padding:4px 8px; cursor:pointer; text-align:left;">Abrir arquivo</span>
+            <input type="file" id="openFile" accept=".txt,.doc,.docx,.odt" style="display:none;">
+          </label>
+        </div>
+      </div>
+      <div class="dropdown" style="display:inline-block; position:relative;">
+        <button type="button" id="gptMenuBtn" style="min-width:110px; background:#e0e0f0;">Assistente IA ▼</button>
+        <div id="gptMenu" class="dropdown-content" style="display:none; position:absolute; left:0; top:100%; background:#f6f6ff; border:1px solid #808080; min-width:180px; z-index:1000; box-shadow:2px 2px 5px #b0b0b0;">
+          <button type="button" class="gpt-action" data-acao="resumir">Resumir seleção</button>
+          <button type="button" class="gpt-action" data-acao="reescrever">Reescrever seleção</button>
+          <button type="button" class="gpt-action" data-acao="corrigir">Corrigir ortografia</button>
+          <button type="button" class="gpt-action" data-acao="traduzir">Traduzir para inglês</button>
+          <button type="button" class="gpt-action" data-acao="expandir">Expandir seleção</button>
+        </div>
+      </div>
+      <button type="button" id="genContentBtn" style="min-width:130px; background:#e0ffe0; margin-left:10px;">Gerar Conteúdo</button>
+      <!-- Modal Gerar Conteúdo -->
+      <div id="genContentModal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:#fff; border:2px solid #60b060; border-radius:7px; max-width:370px; width:92vw; margin:60px auto; padding:12px 10px; box-shadow:2px 2px 12px #888;">
+          <div style="margin-bottom:8px; font-weight:bold; font-size:1.08em;">Gerar Conteúdo Inteligente</div>
+          <label for="genType">Tipo:</label>
+          <select id="genType" style="margin-bottom:8px; width:100%;">
+            <option value="carta">Carta</option>
+            <option value="email">E-mail</option>
+            <option value="relatorio">Relatório</option>
+            <option value="roteiro">Roteiro</option>
+            <option value="lista">Lista</option>
+            <option value="tabela">Tabela</option>
+            <option value="perguntas">Perguntas e Respostas</option>
+            <option value="livre">Texto Livre</option>
+          </select>
+          <label for="genPrompt">Prompt/contexto:</label>
+          <textarea id="genPrompt" style="width:100%; height:60px; margin-bottom:8px;"></textarea>
+          <div id="genContentStatus" style="color:#444; margin-bottom:8px;"></div>
+          <button type="button" id="genContentSendBtn">Gerar</button>
+          <button type="button" id="genContentCloseBtn">Fechar</button>
+          <div id="genContentResult" style="white-space:pre-wrap; margin-top:16px; font-size:1.1em;"></div>
+          <button type="button" id="genContentInsertBtn" style="display:none; margin-top:8px;">Inserir no Editor</button>
+        </div>
+      </div>
+        <div id="gptMenu" class="dropdown-content" style="display:none; position:absolute; left:0; top:100%; background:#f6f6ff; border:1px solid #808080; min-width:180px; z-index:1000; box-shadow:2px 2px 5px #b0b0b0;">
+           <button type="button" class="gpt-action" data-acao="resumir">Resumir seleção</button>
+           <button type="button" class="gpt-action" data-acao="reescrever">Reescrever seleção</button>
+           <button type="button" class="gpt-action" data-acao="corrigir">Corrigir ortografia</button>
+           <button type="button" class="gpt-action" data-acao="traduzir">Traduzir para inglês</button>
+           <button type="button" class="gpt-action" data-acao="expandir">Expandir seleção</button>
+        </div>
+      </div>
+      <!-- Modal IA -->
+      <div id="gptModal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:#fff; border:2px solid #8080c0; border-radius:7px; max-width:600px; margin:120px auto; padding:18px 20px; box-shadow:2px 2px 12px #888;">
+          <div id="gptModalText" style="white-space:pre-wrap; margin-bottom:16px; font-size:1.1em;"></div>
+          <button type="button" id="gptInsertBtn">Substituir Seleção</button>
+          <button type="button" id="gptCloseBtn">Fechar</button>
+        </div>
+      </div>
+        <div id="fileMenu" class="dropdown-content" style="display:none; position:absolute; left:0; top:100%; background:#d4d0c8; border:1px solid #808080; min-width:160px; z-index:1000; box-shadow:2px 2px 5px #b0b0b0;">
+          <button type="button" id="saveTxtBtn" style="width:100%; text-align:left;">Salvar como TXT</button>
+          <button type="button" id="saveDocxBtn" style="width:100%; text-align:left;">Salvar como DOCX</button>
+          <button type="button" id="exportDocxBackendBtn" style="width:100%; text-align:left;">Exportar DOCX (backend)</button>
+          <label for="openFile" style="width:100%; display:block; margin:0; padding:0;">
+            <span style="display:block; width:100%; padding:4px 8px; cursor:pointer; text-align:left;">Abrir arquivo</span>
+            <input type="file" id="openFile" accept=".txt,.doc,.docx,.odt" style="display:none;">
+          </label>
+        </div>
+      </div>
+      <input type="hidden" name="editor" id="editorInput">
+    </form>
+  </div>
+  <div class="editor" contenteditable="true" id="editorDiv" style="min-height: 300px; border: 1px inset #808080; background: #fff; padding: 8px; margin-top: 5px;">{{ content|safe }}</div>
+  <script type="text/javascript">
+    window.onload = function() {
+      document.getElementById('editorDiv').focus();
+      document.getElementById('undoBtn').onclick = function() { execCmd('undo'); };
+      document.getElementById('redoBtn').onclick = function() { execCmd('redo'); };
+      document.getElementById('boldBtn').onclick = function() { execCmd('bold'); };
+      document.getElementById('italicBtn').onclick = function() { execCmd('italic'); };
+      document.getElementById('underlineBtn').onclick = function() { execCmd('underline'); };
+      document.getElementById('ulBtn').onclick = function() { execCmd('insertUnorderedList'); };
+      document.getElementById('olBtn').onclick = function() { execCmd('insertOrderedList'); };
+      document.getElementById('linkBtn').onclick = function() {
+        var url = prompt('Digite a URL do link:', 'http://');
+        if (url) execCmd('createLink', url);
+      };
+      document.getElementById('imgBtn').onclick = function() {
+        var url = prompt('Digite a URL da imagem:', 'http://');
+        if (url) execCmd('insertImage', url);
+      };
+      document.getElementById('removeFormatBtn').onclick = function() { execCmd('removeFormat'); };
+      document.getElementById('colorSelect').onchange = function() { execCmd('foreColor', this.value); };
+      document.getElementById('leftBtn').onclick = function() { execCmd('justifyLeft'); };
+      document.getElementById('centerBtn').onclick = function() { execCmd('justifyCenter'); };
+      document.getElementById('rightBtn').onclick = function() { execCmd('justifyRight'); };
+      document.getElementById('justifyBtn').onclick = function() { execCmd('justifyFull'); };
+      document.getElementById('fontSizeSelect').onchange = function() {
+        if (this.value) execCmd('fontSize', this.value);
+      };
+      document.getElementById('fontNameSelect').onchange = function() {
+        if (this.value) execCmd('fontName', this.value);
+      };
+      // Dropdown menu logic
+      var fileMenuBtn = document.getElementById('fileMenuBtn');
+      var fileMenu = document.getElementById('fileMenu');
+      fileMenuBtn.onclick = function(e) {
+        fileMenu.style.display = (fileMenu.style.display === 'block') ? 'none' : 'block';
+        e.stopPropagation();
+      };
+      document.addEventListener('click', function(e) {
+        fileMenu.style.display = 'none';
+        gptMenu.style.display = 'none';
+      });
+      fileMenu.onclick = function(e) { e.stopPropagation(); };
+      // Menu GPT
+      var gptMenuBtn = document.getElementById('gptMenuBtn');
+      var gptMenu = document.getElementById('gptMenu');
+      gptMenuBtn.onclick = function(e) {
+        gptMenu.style.display = (gptMenu.style.display === 'block') ? 'none' : 'block';
+        e.stopPropagation();
+      };
+      gptMenu.onclick = function(e) { e.stopPropagation(); };
+      // Controle do menu Assistente IA
+      var gptMenuBtn = document.getElementById('gptMenuBtn');
+      var gptMenu = document.getElementById('gptMenu');
+      gptMenuBtn.onclick = function(e) {
+        e.stopPropagation();
+        gptMenu.style.display = (gptMenu.style.display === 'block') ? 'none' : 'block';
+      };
+      document.addEventListener('click', function() {
+        gptMenu.style.display = 'none';
+      });
+      // Modal IA
+      var gptModal = document.getElementById('gptModal');
+      var gptModalText = document.getElementById('gptModalText');
+      var gptInsertBtn = document.getElementById('gptInsertBtn');
+      var gptCloseBtn = document.getElementById('gptCloseBtn');
+      gptCloseBtn.onclick = function() { gptModal.style.display = 'none'; };
+      // GPT ação
+      document.querySelectorAll('.gpt-action').forEach(function(btn) {
+        btn.onclick = function() {
+          var acao = btn.getAttribute('data-acao');
+          var sel = window.getSelection();
+          var range = sel.rangeCount ? sel.getRangeAt(0) : null;
+          var selectedText = sel.toString();
+          if (!selectedText) {
+            alert('Selecione um texto no editor para usar esta ação.');
+            return;
+          }
+          gptMenu.style.display = 'none';
+          gptModalText.innerHTML = '<i>Processando IA...</i>';
+          gptModal.style.display = 'flex';
+          fetch('/gpt_assist', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({texto: selectedText, acao: acao})
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.resposta) {
+              gptModalText.textContent = data.resposta;
+              gptInsertBtn.style.display = '';
+              gptInsertBtn.onclick = function() {
+                if (range) {
+                  range.deleteContents();
+                  range.insertNode(document.createTextNode(data.resposta));
+                  gptModal.style.display = 'none';
+                }
+              };
+            } else {
+              gptModalText.textContent = data.error || 'Erro desconhecido.';
+              gptInsertBtn.style.display = 'none';
+            }
+          })
+          .catch(() => {
+            gptModalText.textContent = 'Erro ao acessar a IA.';
+            gptInsertBtn.style.display = 'none';
+          });
+        };
+      });
+      // Gerar Conteúdo
+      var genContentBtn = document.getElementById('genContentBtn');
+      var genContentModal = document.getElementById('genContentModal');
+      var genContentCloseBtn = document.getElementById('genContentCloseBtn');
+      var genContentSendBtn = document.getElementById('genContentSendBtn');
+      var genContentType = document.getElementById('genType');
+      var genContentPrompt = document.getElementById('genPrompt');
+      var genContentStatus = document.getElementById('genContentStatus');
+      var genContentResult = document.getElementById('genContentResult');
+      var genContentInsertBtn = document.getElementById('genContentInsertBtn');
+      genContentBtn.onclick = function() {
+        genContentModal.style.display = 'flex';
+        genContentStatus.textContent = '';
+        genContentResult.textContent = '';
+        genContentInsertBtn.style.display = 'none';
+        genContentPrompt.value = '';
+      };
+      genContentCloseBtn.onclick = function() {
+        genContentModal.style.display = 'none';
+      };
+      genContentSendBtn.onclick = function(event) {
+        if (event) event.preventDefault();
+        var tipo = genContentType.value;
+        var prompt = genContentPrompt.value;
+        if (!prompt.trim()) {
+          genContentStatus.textContent = 'Digite o contexto ou instrução.';
+          return;
+        }
+        genContentStatus.textContent = 'Gerando conteúdo com IA...';
+        genContentResult.textContent = '';
+        fetch('/gpt_assist', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({texto: prompt, acao: 'gerar_'+tipo})
+        })
+        .then(r => {
+          if (!r.ok) throw new Error('Erro HTTP: ' + r.status);
+          return r.json();
+        })
+        .then(function(data) {
+          console.log('Resposta IA:', data);
+          if (data.resposta) {
+            // Inserir automaticamente no editor e fechar modal
+            var ed = document.getElementById('editorDiv');
+            ed.focus();
+            document.execCommand('insertText', false, data.resposta);
+            genContentModal.style.display = 'none';
+            genContentStatus.textContent = '';
+          } else {
+            genContentStatus.textContent = (data.error ? 'Erro: ' + data.error : 'Erro desconhecido.');
+          }
+        })
+        .catch(function(err) {
+          console.log('Erro ao acessar IA:', err);
+          genContentStatus.textContent = 'Erro ao acessar a IA: ' + err;
+        });
+      };
+
+
+
+      document.getElementById('saveTxtBtn').onclick = function() {
+        var text = document.getElementById('editorDiv').innerText;
+        var blob = new Blob([text], {type: 'text/plain'});
+        var a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'documento.txt';
+        a.click();
+        fileMenu.style.display = 'none';
+      };
+      document.getElementById('saveDocxBtn').onclick = function() {
+        var html = document.getElementById('editorDiv').innerHTML;
+        var blob = new Blob([
+          '<html><head><meta charset="utf-8"></head><body>' + html + '</body></html>'
+        ], {type: 'application/msword'});
+        var a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = 'documento.doc';
+        a.click();
+        fileMenu.style.display = 'none';
+      };
+      document.getElementById('exportDocxBackendBtn').onclick = function() {
+        var html = document.getElementById('editorDiv').innerHTML;
+        var formData = new FormData();
+        formData.append('html', '<html><body>' + html + '</body></html>');
+        fetch('/export_docx', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+          var url = window.URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'documento.docx';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 0);
+        });
+        fileMenu.style.display = 'none';
+      };
+      document.getElementById('openFile').onchange = function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'txt') {
+          var reader = new FileReader();
+          reader.onload = function(evt) {
+            document.getElementById('editorDiv').innerText = evt.target.result;
+          };
+          reader.readAsText(file);
+        } else if (ext === 'docx') {
+          var formData = new FormData();
+          formData.append('file', file);
+          fetch('/import_docx', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.html) {
+              document.getElementById('editorDiv').innerHTML = data.html;
+            } else {
+              alert('Erro ao importar DOCX: ' + (data.error || 'desconhecido'));
+            }
+          })
+          .catch(() => alert('Erro ao importar DOCX.'));
+        } else {
+          reader.readAsText(file); // browsers antigos não conseguem extrair HTML puro de docx/odt, mas tentamos
+        }
+      };
+    }
+    function execCmd(command, value) {
+      var ed = document.getElementById('editorDiv');
+      ed.focus();
+      if (typeof value !== 'undefined') {
+        document.execCommand(command, false, value);
+      } else {
+        document.execCommand(command, false, null);
+      }
+    }
+    function submitEditor() {
+      document.getElementById('editorInput').value = document.getElementById('editorDiv').innerHTML;
+      return true;
+    }
+  </script>
+</body>
+</html>

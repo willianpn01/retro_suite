@@ -1,0 +1,36 @@
+# Ambiente virtual Python
+venv/
+
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Arquivos temporários e de backup
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Configurações do sistema
+.env
+*.env
+
+# Arquivos salvos pelo app (se não devem ir pro git)
+saved_files/
+
+# Logs
+*.log
+
+# Arquivos do sistema operacional
+*.bak
+*.tmp
+
+# Arquivos do VSCode e IDEs
+.vscode/
+.idea/
+
+# Arquivos de testes temporários
+/test_output/

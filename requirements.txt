@@ -1,0 +1,5 @@
+Flask==2.3.3
+python-docx
+pillow
+beautifulsoup4
+requests
